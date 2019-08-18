@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addComment } from './store';
+import { addComment, editPost } from './store';
 import CommentList from './CommentList';
 
 class Post extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: ''
+      comment: '',
+      edit: false,
+      postTitle: '',
+      postBody: ''
     };
   };
 
@@ -30,15 +33,70 @@ class Post extends React.Component {
     this.setState({ comment: '' })
   };
 
+  editingPostTurnOn = () => {
+    const { posts, match } = this.props;
+    const post = posts.find(post => post.id == match.params.postId);
+    this.setState({
+        edit: true,
+        postTitle: post.title,
+        postBody: post.body
+      });
+  };
+
+  sendEditedPost = (event) => {
+    event.preventDefault();
+    const { posts, match } = this.props;
+    const { postTitle, postBody } = this.state;
+    const post = posts.find(post => post.id == match.params.postId);
+    
+
+    this.props.editPost({
+      ...post,
+      title: postTitle,
+      body: postBody
+    });
+
+    this.setState({ edit: false })
+  };
+
+  editPostTitle = (event) => {
+    this.setState({ postTitle: event.target.value });
+  };
+
+  editPostBody = (event) => {
+    this.setState({ postBody: event.target.value });
+  };
+
   render() {
-    const { comment } = this.state;
-    const post = this.props.posts.find(post => post.id == this.props.match.params.postId)
+    const { comment, edit, postTitle, postBody } = this.state;
+    const { posts, match } = this.props;
+
+    console.log(posts);
+    const post = posts.find(post => {
+      console.log(post);
+      console.log(match.params.postId);
+      return post.id == match.params.postId
+    });
+    console.log(post);
 
     return (
       <div>
-        <h1>{post.title}</h1>
-  
-        <div>{post.body}</div>
+        <div>
+          {
+            edit
+            ? <form onSubmit={this.sendEditedPost}>
+                <input type="text" value={postTitle} onChange={this.editPostTitle} />
+                <textarea value={postBody} onChange={this.editPostBody} />
+                <input type="submit" value="Save" />
+              </form>
+
+            : <div>
+                <h1>{post.title}</h1>
+                <div>{post.body}</div>
+                <button onClick={this.editingPostTurnOn}>Edit</button>
+              </div>
+          }
+        </div>
   
         <div>
           Author:&nbsp;
@@ -66,7 +124,8 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-  addComment: (value) => dispatch(addComment(value))
+  addComment: (value) => dispatch(addComment(value)),
+  editPost: (value) => dispatch(editPost(value))
 });
 
 export default connect(mapState, mapDispatch)(Post);
