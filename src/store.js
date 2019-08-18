@@ -1,6 +1,7 @@
 import { createStore } from 'redux';
 const SET_POSTS = 'setPosts';
 const ADD_COMMENT = 'addComment';
+const ADD_POST = 'addPost';
 
 export const setPosts = (value) => ({
   type: SET_POSTS,
@@ -9,6 +10,11 @@ export const setPosts = (value) => ({
 
 export const addComment = (value) => ({
   type: ADD_COMMENT,
+  value
+});
+
+export const addPost = (value) => ({
+  type: ADD_POST,
   value
 });
 
@@ -26,15 +32,31 @@ const reducer = (state, action) => {
         posts: state.posts
           .map(post => {
             if (post.id === action.value.id) {
-              return {
+              if (post.comments) {
+                return {
+                  ...post,
+                  comments: [
+                    ...post.comments,
+                    action.value.comment
+                  ]
+                }
+              } else return {
                 ...post,
                 comments: [
-                  ...post.comments,
                   action.value.comment
                 ]
-              }
+              };
             } else return post;
           })
+      };
+
+    case ADD_POST:
+      return {
+        ...state,
+        posts: [
+          ...state.posts,
+          action.value
+        ]
       };
 
     default:

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { addPost } from 'store';
 import { NavLink } from 'react-router-dom';
 
 class PostList extends React.Component {
@@ -44,4 +45,8 @@ const mapState = (state) => ({
   posts: state.posts
 });
 
-export default connect(mapState, null)(PostList);
+const mapDispatch = (dispatch) => ({
+  addPost: (value) => dispatch(addPost(value))
+});
+
+export default connect(mapState, mapDispatch)(PostList);

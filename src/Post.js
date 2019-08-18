@@ -6,14 +6,10 @@ import CommentList from './CommentList';
 class Post extends React.Component {
   constructor(props) {
     super(props);
-    const { posts } = props;
-
     this.state = {
-      posts: posts,
       comment: ''
     };
   };
-
 
   recordComment = (event) => {
     this.setState({ comment: event.target.value });
@@ -21,21 +17,22 @@ class Post extends React.Component {
 
   sendComment = (event) => {
     event.preventDefault();
-    const { posts, comment } = this.state;
+    const { comment } = this.state;
 
     this.props.addComment({
-      id: posts.find(post => post.id == this.props.match.params.postId).id,
+      id: this.props.posts.find(post => post.id == this.props.match.params.postId).id,
       comment: {
-        id: 0,
+        id: comment + Math.floor(Math.random()*10),
         body: comment
       }
     });
+
+    this.setState({ comment: '' })
   };
 
   render() {
-    const { posts, comment } = this.state;
-    const post = posts.find(post => post.id == this.props.match.params.postId)
-    console.log(this.props)
+    const { comment } = this.state;
+    const post = this.props.posts.find(post => post.id == this.props.match.params.postId)
 
     return (
       <div>
