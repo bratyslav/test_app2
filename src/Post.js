@@ -70,40 +70,56 @@ class Post extends React.Component {
     const post = posts.find(post => post.id == match.params.postId);
 
     return (
-      <div classNat>
-        <div>
-          {
-            edit
-            ? <form onSubmit={this.sendEditedPost}>
-                <input type="text" value={postTitle} onChange={this.editPostTitle} />
-                <textarea value={postBody} onChange={this.editPostBody} />
-                <input type="submit" value="Save" />
-              </form>
+      <div>
+        <h1>{post.title}</h1>
 
-            : <div>
-                <h1>{post.title}</h1>
-                <div>{post.body}</div>
-                <button onClick={this.editingPostTurnOn}>Edit</button>
-              </div>
-          }
-        </div>
-  
-        <div>
-          Author:&nbsp;
-          {post.creator || 'unknown'}
-        </div>
+        <div className="post">
+          <div>
+            {
+              edit
+              ? <form
+                  onSubmit={this.sendEditedPost}
+                  className="form__edit-post"
+                >
+                  <label>
+                    Title:&nbsp;
+                    <input
+                      type="text"
+                      value={postTitle}
+                      onChange={this.editPostTitle}
+                    />
+                  </label>
+                  <textarea value={postBody} onChange={this.editPostBody} />
+                  <input type="submit" value="Save" />
+                </form>
+
+              : <div className="post__body">
+                  <div>{post.body}</div>
+                  <button onClick={this.editingPostTurnOn}>Edit</button>
+                </div>
+            }
+          </div>
     
-        <div>
-          Publish date:&nbsp;
-          {post.date ? post.date.slice(0, 10) : 'unknown'}
+          <div>
+            Author:&nbsp;
+            {post.creator || 'unknown'}
+          </div>
+      
+          <div>
+            Publish date:&nbsp;
+            {post.date ? post.date.slice(0, 10) : 'unknown'}
+          </div>
+    
+          <CommentList comments={post.comments} />
+    
+          <form
+            onSubmit={this.sendComment}
+            className="form__send-comment"
+          >
+            <textarea onChange={this.recordComment} value={comment} />
+            <input type="submit" value="Send Comment" />
+          </form>
         </div>
-  
-        <CommentList comments={post.comments} />
-  
-        <form onSubmit={this.sendComment}>
-          <textarea onChange={this.recordComment} value={comment} />
-          <input type="submit" value="Submit" />
-        </form>
       </div>
     );
   };
