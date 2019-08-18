@@ -21,18 +21,20 @@ const reducer = (state, action) => {
       };
 
     case ADD_COMMENT:
-      console.log(state.posts.find(post => post.id === action.value.id).comments)
       return {
         ...state,
         posts: state.posts
-          .map(post => post.id === action.value.id
-            ? {
+          .map(post => {
+            if (post.id === action.value.id) {
+              return {
                 ...post,
-                comments: post.comments.push(action.value.comment)
+                comments: [
+                  ...post.comments,
+                  action.value.comment
+                ]
               }
-
-            : post
-          )
+            } else return post;
+          })
       };
 
     default:

@@ -14,6 +14,7 @@ class Post extends React.Component {
     };
   };
 
+
   recordComment = (event) => {
     this.setState({ comment: event.target.value });
   };
@@ -34,8 +35,7 @@ class Post extends React.Component {
   render() {
     const { posts, comment } = this.state;
     const post = posts.find(post => post.id == this.props.match.params.postId)
-    console.log(post)
-    console.log(post.comments)
+    console.log(this.props)
 
     return (
       <div>
