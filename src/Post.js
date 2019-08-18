@@ -18,14 +18,20 @@ class Post extends React.Component {
   sendComment = (event) => {
     event.preventDefault();
     const { comment } = this.state;
+    const { posts, match } = this.props;
+    const post = posts.find(post => post.id == match.params.postId);
 
-    this.props.addComment({
-      id: this.props.posts.find(post => post.id == this.props.match.params.postId).id,
-      comment: {
-        id: comment + Math.floor(Math.random()*10),
-        body: comment
-      }
-    });
+    if (comment.length !== 0) {
+      this.props.addComment({
+        id: post.id,
+        comment: {
+          id: post.comments
+            ? post.comments.length
+            : 0,
+          body: comment
+        }
+      });
+    };
 
     this.setState({ comment: '' })
   };

@@ -26,7 +26,7 @@ class PostList extends React.Component {
 
     if (post.length !== 0 && title.length !== 0) {
       this.props.addPost({
-        id: title + Math.floor(Math.random()*100),
+        id: this.props.posts.length,
         title: title,
         body: post,
         creator: creator,
