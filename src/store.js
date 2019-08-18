@@ -66,7 +66,6 @@ const reducer = (state, action) => {
       };
 
     case EDIT_POST:
-      console.log(action.value)
       return {
         ...state,
         posts: state.posts.map(post => {

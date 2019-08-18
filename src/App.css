@@ -1,5 +1,13 @@
-form {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-}
+@import url("./styles/post-list.scss");
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif; }
+
+h1 {
+  margin-block-start: 0;
+  padding: 10px 0;
+  text-align: center;
+  color: white;
+  background-color: grey; }
+
+/*# sourceMappingURL=App.css.map */

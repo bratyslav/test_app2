@@ -4,14 +4,11 @@ import { addComment, editPost } from './store';
 import CommentList from './CommentList';
 
 class Post extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comment: '',
-      edit: false,
-      postTitle: '',
-      postBody: ''
-    };
+  state = {
+    comment: '',
+    edit: false,
+    postTitle: '',
+    postBody: ''
   };
 
   recordComment = (event) => {
@@ -70,17 +67,10 @@ class Post extends React.Component {
   render() {
     const { comment, edit, postTitle, postBody } = this.state;
     const { posts, match } = this.props;
-
-    console.log(posts);
-    const post = posts.find(post => {
-      console.log(post);
-      console.log(match.params.postId);
-      return post.id == match.params.postId
-    });
-    console.log(post);
+    const post = posts.find(post => post.id == match.params.postId);
 
     return (
-      <div>
+      <div classNat>
         <div>
           {
             edit

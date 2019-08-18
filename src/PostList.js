@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 class PostList extends React.Component {
   state = {
+    addingPostFormIsVisible: false,
     post: '',
     title: '',
     creator: ''
@@ -23,14 +24,23 @@ class PostList extends React.Component {
     event.preventDefault();
     const { post, title, creator } = this.state;
 
-    this.props.addPost({
-      id: title + Math.floor(Math.random()*10),
-      title: title,
-      body: post,
-      creator: creator,
-      comments: [],
-      date: this.getCurrentDate()
-    })
+    if (post.length !== 0 && title.length !== 0) {
+      this.props.addPost({
+        id: title + Math.floor(Math.random()*100),
+        title: title,
+        body: post,
+        creator: creator,
+        comments: [],
+        date: this.getCurrentDate()
+      });
+    };
+
+    this.setState({
+      addingPostFormIsVisible: false,
+      post: '',
+      title: '',
+      creator: ''
+    });
   };
 
   recordPostBody = (event) => {
@@ -45,8 +55,12 @@ class PostList extends React.Component {
     this.setState({ creator: event.target.value });
   };
 
+  getFormVisible = () => {
+    this.setState({ addingPostFormIsVisible: true });
+  };
+
   render() {
-    const { post, title, creator } = this.state;
+    const { post, title, creator, addingPostFormIsVisible } = this.state;
 
     return (
       this.props.posts ?
@@ -54,29 +68,25 @@ class PostList extends React.Component {
       <div>
         <h1>Latest Posts</h1>
 
-        <form onSubmit={this.sendPost}>
-          Title: <input type="text" onChange={this.recordPostTitle} value={title} />
-          Author: <input type="text" onChange={this.recordPostCreator} value={creator} />
-          <textarea onChange={this.recordPostBody} value={post} />
-          <input type="submit" value="Submit" />
-        </form>
-
-        <ul>
+        <ul className="post-list">
           {
             this.props.posts.map(post => (
               <li key={post.id}>
                 <h2>
-                  <NavLink to={`/posts/${post.id}`}>
+                  <NavLink
+                    to={`/posts/${post.id}`}
+                    className="post-header"
+                  >
                     {post.title}
                   </NavLink>
                 </h2>
   
-                <div>
+                <div className="post-description">
                   Author:&nbsp;
                   {post.creator || 'unknown'}
                 </div>
   
-                <div>
+                <div className="post-description">
                   Publish date:&nbsp;
                   {post.date ? post.date.slice(0, 10) : 'unknown'}
                 </div>
@@ -84,6 +94,46 @@ class PostList extends React.Component {
             ))
           }
         </ul>
+
+        <div>
+          {
+            addingPostFormIsVisible
+
+            ? <form
+                onSubmit={this.sendPost}
+                className="form__add-new-post"
+              >
+                <label>
+                  Title:&nbsp;
+                  <input
+                    type="text"
+                    onChange={this.recordPostTitle}
+                    value={title}
+                  />
+                </label>
+
+                <label>
+                  Author:&nbsp;
+                  <input
+                    type="text"
+                    onChange={this.recordPostCreator}
+                    value={creator}
+                  />
+                </label>
+
+                <textarea onChange={this.recordPostBody} value={post} />
+
+                <input type="submit" value="Submit" />
+              </form>
+
+            : <button
+                onClick={this.getFormVisible}
+                className="button__add-new-post"
+              >
+                Add New Post
+              </button>
+          }
+        </div>
       </div>
 
       : <h1>Loader</h1>
